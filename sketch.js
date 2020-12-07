@@ -1,78 +1,89 @@
+var helicopterIMG, helicopterSprite, packageSprite,packageIMG;
+var packageBody,ground;
+
+var box1, box2, box3;
+
 const Engine = Matter.Engine;
-const World= Matter.World;
+const World = Matter.World;
 const Bodies = Matter.Bodies;
-const Constraint = Matter.Constraint
+const Body = Matter.Body;
 
-var engine, world;
-var box1, pig1;
-var backgroundImg,platform,log6;
-
-function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+function preload()
+{
+	helicopterIMG=loadImage("helicopter.png")
+	packageIMG=loadImage("package.png")
 }
 
-function setup(){
-    var canvas = createCanvas(1200,400);
-    engine = Engine.create();
-    world = engine.world;
+function setup() {
+	createCanvas(800, 700);
+	rectMode(CENTER);
+	
 
-    log6 = new Log (230,180,80,PI/2)
+	packageSprite=createSprite(width/2, 80, 10,10);
+	packageSprite.addImage(packageIMG)
+	packageSprite.scale=0.2
 
+	helicopterSprite=createSprite(width/2, 200, 10,10);
+	helicopterSprite.addImage(helicopterIMG)
+	helicopterSprite.scale=0.6
 
-    ground = new Ground(600,height,1200,20);
-    platform = new Ground(150, 305, 300, 170);
-
-    box1 = new Box(700,320,70,70);
-    box2 = new Box(920,320,70,70);
-    pig1 = new Pig(810, 350);
-    log1 = new Log(810,260,300, PI/2);
-
-    box3 = new Box(700,240,70,70);
-    box4 = new Box(920,240,70,70);
-    pig3 = new Pig(810, 220);
-
-    log3 =  new Log(810,180,300, PI/2);
-
-    box5 = new Box(810,160,70,70);
-    log4 = new Log(760,120,150, PI/7);
-    log5 = new Log(870,120,150, -PI/7);
-
-    bird = new Bird(100,100);
+	groundSprite=createSprite(width/2, height-7, width,10);
+	groundSprite.shapeColor=color(255)
 
 
-    chain = new Chain(bird.body,log6.body)
-    
+	engine = Engine.create();
+	world = engine.world;
 
-    
+	var pack_options = {
+
+	restitution:0.4, isStatic:true
+		
+	}
+
+	packageBody = Bodies.circle(width/2 , 200 , 5 ,pack_options);
+	World.add(world, packageBody);
+	
+
+var ground_options = {
+
+ isStatic:true
+
 }
 
-function draw(){
-    background(backgroundImg);
-    Engine.update(engine);
-    console.log(box2.body.position.x);
-    console.log(box2.body.position.y);
-    console.log(box2.body.angle);
-    box1.display();
-    box2.display();
-    ground.display();
-    pig1.display();
-    log1.display();
+	ground = Bodies.rectangle(width/2, 650, width, 10 , ground_options);
+ 	World.add(world, ground);
 
-    box3.display();
-    box4.display();
-    pig3.display();
-    log3.display();
 
-    box5.display();
-    log4.display();
-    log5.display();
-    log6.display();
+	Engine.run(engine);
 
-    bird.display();
-    platform.display();
+	box1 = new Box(280,655,20, 100);
+	box2 = new Box(390,680,200, 20);
+	box3 = new Box(500,655,20, 100);
+	
 
-    chain.display();
-    
-
-    
+  
 }
+
+
+function draw() {
+  rectMode(CENTER);
+  background(0);
+  packageSprite.x= packageBody.position.x 
+  packageSprite.y= packageBody.position.y 
+
+  box1.display();
+  box2.display();
+  box3.display();
+
+
+  drawSprites();
+ 
+}
+
+function keyPressed() {
+ if (keyCode === DOWN_ARROW) {
+Matter.Body.setStatic(packageBody, false)
+    
+  }
+}
+
